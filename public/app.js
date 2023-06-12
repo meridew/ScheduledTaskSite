@@ -1,4 +1,8 @@
+console.log("app.js is loaded");
+
+
 $(document).ready(function() {
+    $('#spinner').show();
     // Fetch tasks and populate the page
     $.getJSON('/getTasks', function(tasks) {
         for (let task of tasks) {
@@ -35,7 +39,15 @@ $(document).ready(function() {
             });
         });
 
+        $('#spinner').hide();
     });
+
+    $('#theme-toggle').click(function(event) {
+        event.preventDefault(); // Prevent page reload
+        event.stopPropagation();
+        $('body').toggleClass('light-theme');
+    });
+      
 
     // Add input event listener to the search bar to filter the tasks
     $('#search-input').on('input', function() {
@@ -51,3 +63,4 @@ $(document).ready(function() {
         });
     });
 });
+

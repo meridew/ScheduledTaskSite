@@ -16,6 +16,28 @@
             background-color: #495057;
             cursor: pointer;
         }
+
+        .light-theme {
+            background-color: #f8f9fa !important;
+            color: #343a40 !important;
+        }
+
+        .light-theme .navbar-brand {
+            color: #343a40 !important;
+        }
+
+        .light-theme .navbar {
+            background-color: #e9ecef !important;
+        }
+
+        .light-theme .card {
+            background-color: #fff !important;
+            color: #343a40 !important;
+        }
+
+        #spinner {
+            display:block;
+        }
     </style>
 </head>
 
@@ -23,9 +45,17 @@
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Scheduled Tasks</a>
         <form class="form-inline">
-            <input class="form-control mr-sm-2" id="search-input" type="search" placeholder="Search" aria-label="Search">
+            <input class="form-control mr-sm-2" id="search-input" type="search" placeholder="Search"
+                aria-label="Search">
+            <button class="btn btn-secondary" id="theme-toggle">Toggle Dark Mode</button>
         </form>
     </nav>
+    
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-light" id="spinner" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
 
     <div id="tasks-container" class="container">
         <!-- Task cards will be inserted here dynamically -->

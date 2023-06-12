@@ -1,4 +1,4 @@
-$tasks = Get-ScheduledTask -TaskPath "\BlackBerry UEM\"
+$tasks = Get-ScheduledTask # -TaskPath "\BlackBerry UEM\"
 
 $datas = @()
 
@@ -7,29 +7,38 @@ foreach($task in $tasks)
     $info = $task | Get-ScheduledTaskInfo
 
     $triggers = @()
-    foreach($trigger in $task.Triggers)
+
+    if($task.Triggers.Count -eq 0)
     {
-        $schedule = if ($trigger.DaysInterval) {
-                      "Every $($trigger.DaysInterval) days at $($trigger.StartBoundary)"
-                  } elseif ($trigger.WeeksInterval) {
-                      "Every $($trigger.WeeksInterval) weeks on $($trigger.DaysOfWeek) at $($trigger.StartBoundary)"
-                  } elseif ($trigger -is [CimInstance] -and $trigger.CimClass.CimClassName -eq "DailyTrigger") {
-                      "Daily at $($trigger.StartBoundary)"
-                  } elseif ($trigger -is [CimInstance] -and $trigger.CimClass.CimClassName -eq "WeeklyTrigger") {
-                      "Weekly on $($trigger.DaysOfWeek) at $($trigger.StartBoundary)"
-                  } elseif ($trigger -is [CimInstance] -and $trigger.CimClass.CimClassName -eq "MonthlyTrigger") {
-                      "Monthly on days $($trigger.DaysOfMonth) at $($trigger.StartBoundary)"
-                  } else {
-                      "At $($trigger.StartBoundary)"
-                  }
+        $schedule = "None"
+
         $triggers += $schedule
     }
+    else
+    {
+        foreach($trigger in $task.Triggers)
+        {
+            $schedule = if ($trigger.DaysInterval) {
+                          "Every $($trigger.DaysInterval) days at $($trigger.StartBoundary)"
+                      } elseif ($trigger.WeeksInterval) {
+                          "Every $($trigger.WeeksInterval) weeks on $($trigger.DaysOfWeek) at $($trigger.StartBoundary)"
+                      } elseif ($trigger -is [CimInstance] -and $trigger.CimClass.CimClassName -eq "DailyTrigger") {
+                          "Daily at $($trigger.StartBoundary)"
+                      } elseif ($trigger -is [CimInstance] -and $trigger.CimClass.CimClassName -eq "WeeklyTrigger") {
+                          "Weekly on $($trigger.DaysOfWeek) at $($trigger.StartBoundary)"
+                      } elseif ($trigger -is [CimInstance] -and $trigger.CimClass.CimClassName -eq "MonthlyTrigger") {
+                          "Monthly on days $($trigger.DaysOfMonth) at $($trigger.StartBoundary)"
+                      } else {
+                          "Custom trigger"
+                      }
+            $triggers += $schedule
+        }
+    }
     
-
     $data = [PSCustomObject]@{
         "id"          = $task.TaskName.ToLower().Replace(" ", "_")
         "name"        = $task.TaskName
-        "path"        = $task.TaskPath
+        "path"        = "$(hostname)\Task Scheduler$($task.TaskPath)"
         "description" = $task.Description
         "state"       = $info.State
         "lastRunTime" = $info.LastRunTime
