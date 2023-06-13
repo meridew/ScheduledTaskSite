@@ -1,6 +1,3 @@
-console.log("app.js is loaded");
-
-
 $(document).ready(function() {
     $('#spinner').show();
     // Fetch tasks and populate the page
